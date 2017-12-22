@@ -8,6 +8,7 @@ const fs = require("fs");
 // Runs Coverage Notifier
 const settings = {
     useTextNotify: !process.env.SLACK_WEBHOOK,
+    useSvn: !!process.env.useSvn,
     istanbul: {
         rootDir: process.env.PWD,
         coverageFiles: ["coverage/coverage-final.json"],
@@ -15,8 +16,9 @@ const settings = {
         threshold: 100
     },
     slack: {
-        webhook: process.env.SLACK_WEBHOOK
-    },
+        webhook: process.env.SLACK_WEBHOOK,
+	    compact: true
+	},
     project: {
         projectName: process.env.npm_package_name,
     }
@@ -31,13 +33,15 @@ if (packageJson.coverage) {
     settings.slack.username = packageJson.coverage.username || settings.slack.username;
     settings.project.projectName = packageJson.coverage.projectName || settings.project.projectName || packageJson.name;
     settings.project.repositoryUrl = packageJson.coverage.repositoryUrl;
+    settings.useSvn = packageJson.coverage.useSvn || settings.useSvn;
+    settings.slack.compact = packageJson.coverage.compact || settings.slack.compact;
 }
 
 const reports = new IstanbulReport(settings.istanbul);
 reports.generateSummary()
     .then(() => {
         let coverage = reports.processSummary();
-        let build = CommitInfo.git();
+        let build = settings.useSvn? CommitInfo.svn(): CommitInfo.git();
         Promise.all([coverage, build]).then(values => {
             settings.project.coverage = values[0];
             settings.project.build = values[1];

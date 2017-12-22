@@ -20,7 +20,7 @@ class SlackNotify {
                 reject(new Error("Coverage and/or build data was not provided"))
             }
             let threshold = data.coverage.success ? this.settings.result.pass : this.settings.result.fail;
-            let commitRef = data.build.refs.length === 1 ? data.build.refs[0] : data.build.refs[1];
+            let commitRef = !data.build || !data.build.refs? "": data.build.refs.length === 1 ? data.build.refs[0] : data.build.refs[1];
             const payload = {
                 username: this.settings.username,
                 channel: this.settings.channel,
@@ -33,43 +33,52 @@ class SlackNotify {
                         title: `${data.projectName} - coverage check ${threshold.text}`,
                         title_link: `${data.repositoryUrl}/commits/${data.build.revision}`,
                         footer: `${data.build.date} - ${data.build.author} commited ${data.build.shortRevision} ${commitRef}`,
-                        fields: [
-                            {
-                                title: "Total Coverage",
-                                value: `${data.coverage.project}%`,
-                                short: true
-                            },
-                            {
-                                title: "Threshold",
-                                value: `${data.coverage.threshold}%`,
-                                short: true
-                            },
-                            {
-                                title: "Statements",
-                                value: `${data.coverage.statements}%`,
-                                short: true
-                            },
-                            {
-                                title: "Functions / Methods",
-                                value: `${data.coverage.functions}%`,
-                                short: true
-                            },
-                            {
-                                title: "Branches",
-                                value: `${data.coverage.branches}%`,
-                                short: true
-                            },
-                            {
-                                title: "Lines",
-                                value: `${data.coverage.lines}%`,
-                                short: true
-                            }
-                        ]
-                    },
-                ],
+                        fields: this.buildAttachments(data)
+                    }
+                ]
             };
             resolve(payload);
         });
+    }
+    
+    buildAttachments(data){
+        let attachments = [
+            {
+                title: "Total Coverage",
+                value: `${data.coverage.project}%`,
+                short: true
+            },
+            {
+                title: "Threshold",
+                value: `${data.coverage.threshold}%`,
+                short: true
+            }
+        ];
+
+
+		if (!this.settings.compact){
+			attachments = attachments.concat([{
+				title: "Statements",
+				value: `${data.coverage.statements}%`,
+				short: true
+			},
+			{
+				title: "Functions / Methods",
+				value: `${data.coverage.functions}%`,
+				short: true
+			},
+			{
+				title: "Branches",
+				value: `${data.coverage.branches}%`,
+				short: true
+			},
+			{
+				title: "Lines",
+				value: `${data.coverage.lines}%`,
+				short: true
+			}]);
+        }
+        return attachments;
     }
 
     sendNotification(payload) {
