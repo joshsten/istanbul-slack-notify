@@ -6,7 +6,7 @@ class CommitInfo {
 
     static svn() {
         return new Promise((resolve, reject) => {
-			let command = `svn log -l 1 --xml --trust-server-cert --non-interactive --username ${process.env.svnUserName} --password ${process.env.svnPassword}`;
+			let command = `svn log ${process.env.svnBranch} -l 1 --xml --trust-server-cert --non-interactive --username ${process.env.svnUserName} --password ${process.env.svnPassword}`;
             exec(command, (err, stdout, stderr) => {
                 if (err) {
                     err.stderr = stderr;
