@@ -31,6 +31,7 @@ if (packageJson.coverage) {
     settings.istanbul.threshold = packageJson.coverage.threshold || settings.istanbul.threshold;
     settings.slack.channel = packageJson.coverage.channel || settings.slack.channel;
     settings.slack.username = packageJson.coverage.username || settings.slack.username;
+    settings.slack.webhook = packageJson.coverage.webhook || settings.slack.webhook;
     settings.project.projectName = packageJson.coverage.projectName || settings.project.projectName || packageJson.name;
     settings.project.repositoryUrl = packageJson.coverage.repositoryUrl;
     settings.useSvn = packageJson.coverage.useSvn || settings.useSvn;

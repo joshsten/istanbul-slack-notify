@@ -40,12 +40,12 @@ class CommitInfo {
                 "\"authorEmail\"": "\"%ae\"",
                 "\"refs\"": "\"%d\""
             });
-            let command = `git log -1 --no-color --decorate=short --pretty=format:'${format}' HEAD`;
+            let command = `git log -1 --no-color --decorate=short --pretty=format:${format} HEAD`;
             exec(command, (err, stdout, stderr) => {
                 if (err) {
                     err.stderr = stderr;
                     return reject(err);
-                }
+				}
                 let commitInfo = JSON.parse(stdout);
                 commitInfo.refs = this.fixGitRefs(commitInfo.refs);
                 return resolve(commitInfo);
