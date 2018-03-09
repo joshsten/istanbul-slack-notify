@@ -35,7 +35,8 @@ if (packageJson.coverage) {
     settings.project.projectName = packageJson.coverage.projectName || settings.project.projectName || packageJson.name;
     settings.project.repositoryUrl = packageJson.coverage.repositoryUrl;
     settings.useSvn = packageJson.coverage.useSvn || settings.useSvn;
-    settings.slack.compact = packageJson.coverage.compact || settings.slack.compact;
+	settings.slack.compact = packageJson.coverage.compact || settings.slack.compact;
+	settings.useTextNotify = !settings.slack.webhook;
 }
 
 const reports = new IstanbulReport(settings.istanbul);
@@ -48,7 +49,7 @@ reports.generateSummary()
             settings.project.build = values[1];
 
             if(settings.useTextNotify) {
-                const textNotify = new TextNotify();
+				const textNotify = new TextNotify();
                 textNotify.printCoverage(settings.project);
             } else {
                 const slack = new SlackNotify(settings.slack);
