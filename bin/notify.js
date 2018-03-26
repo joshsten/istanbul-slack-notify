@@ -3,6 +3,7 @@ const IstanbulReport = require("../src/istanbul-report");
 const SlackNotify = require("../src/slack-notify");
 const TextNotify = require("../src/text-notify");
 const CommitInfo = require("../src/commit-info");
+const CodeCoverageHistory = require("../src/code-coverage-history");
 const fs = require("fs");
 
 // Runs Coverage Notifier
@@ -37,9 +38,11 @@ if (packageJson.coverage) {
     settings.useSvn = packageJson.coverage.useSvn || settings.useSvn;
 	settings.slack.compact = packageJson.coverage.compact || settings.slack.compact;
 	settings.useTextNotify = !settings.slack.webhook;
+	settings.trackingEnpoint = 'http://code-coverage.getsandbox.com';
 }
 
 const reports = new IstanbulReport(settings.istanbul);
+const coverageReporter = new CodeCoverageHistory(settings.trackingEnpoint);
 reports.generateSummary()
     .then(() => {
         let coverage = reports.processSummary();
@@ -47,10 +50,11 @@ reports.generateSummary()
         Promise.all([coverage, build]).then(values => {
             settings.project.coverage = values[0];
             settings.project.build = values[1];
-
+			coverageReporter.postCoverageAsync(values[0]);
             if(settings.useTextNotify) {
 				const textNotify = new TextNotify();
-                textNotify.printCoverage(settings.project);
+				textNotify.printCoverage(settings.project);
+				coverageReporter.getCoverageHistoryAsync().then(console.log);
             } else {
                 const slack = new SlackNotify(settings.slack);
                 slack.buildCoveragePayload(settings.project)
