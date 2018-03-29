@@ -21,7 +21,6 @@ class CommitInfo {
 						date: this.formatDate(new Date(Date.parse(revision.date[0]))),
 						subject: revision.msg[0]
 					};
-					console.log(formattedJson);
 					return resolve(formattedJson);
 				});
                 

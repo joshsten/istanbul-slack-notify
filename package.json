@@ -1,47 +1,74 @@
 {
-  "name": "istanbul-slack-notify",
-  "version": "1.0.18",
-  "description": "Sends istanbul / jest coverage summary and git build details to Slack using a pass/fail threshold for project coverage.",
-  "main": "./bin/notify.js",
-  "scripts": {
-    "test": "npm run lint && npm run coverage && ./bin/notify.js",
-    "notify": "npm run test && ./bin/notify.js",
-    "lint": "./node_modules/.bin/eslint src/ test/",
-    "coverage": "./node_modules/.bin/jest --coverage",
-    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+  "_args": [
+    [
+      {
+        "raw": "istanbul-slack-notify@https://github.com/joshsten/istanbul-slack-notify/archive/history.tar.gz",
+        "scope": null,
+        "escapedName": "istanbul-slack-notify",
+        "name": "istanbul-slack-notify",
+        "rawSpec": "https://github.com/joshsten/istanbul-slack-notify/archive/history.tar.gz",
+        "spec": "https://github.com/joshsten/istanbul-slack-notify/archive/history.tar.gz",
+        "type": "remote"
+      },
+      "D:\\svn\\borealis-git\\Qa\\Borealis\\CivicPlus.CMS\\Assets\\cpui"
+    ]
+  ],
+  "_from": "https://github.com/joshsten/istanbul-slack-notify/archive/history.tar.gz",
+  "_id": "istanbul-slack-notify@1.0.18",
+  "_inCache": true,
+  "_location": "/istanbul-slack-notify",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "istanbul-slack-notify@https://github.com/joshsten/istanbul-slack-notify/archive/history.tar.gz",
+    "scope": null,
+    "escapedName": "istanbul-slack-notify",
+    "name": "istanbul-slack-notify",
+    "rawSpec": "https://github.com/joshsten/istanbul-slack-notify/archive/history.tar.gz",
+    "spec": "https://github.com/joshsten/istanbul-slack-notify/archive/history.tar.gz",
+    "type": "remote"
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "https://github.com/joshsten/istanbul-slack-notify/archive/history.tar.gz",
+  "_shasum": "d83be897e9a61a59a7a976bc280039f31821eda7",
+  "_shrinkwrap": null,
+  "_spec": "istanbul-slack-notify@https://github.com/joshsten/istanbul-slack-notify/archive/history.tar.gz",
+  "_where": "D:\\svn\\borealis-git\\Qa\\Borealis\\CivicPlus.CMS\\Assets\\cpui",
+  "author": {
+    "name": "Matt Weston"
   },
   "bin": {
     "istanbul-slack-notify": "./bin/notify.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mattyboy/istanbul-slack-notify.git"
-  },
-  "keywords": [
-    "slack",
-    "jest",
-    "coverage",
-    "istanbul"
-  ],
-  "author": "Matt Weston",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mattyboy/istanbul-slack-notify/issues"
   },
-  "homepage": "https://github.com/mattyboy/istanbul-slack-notify#readme",
+  "coverage": {
+    "useSvn": true,
+    "coverageFiles": [
+      "coverage/coverage-final.json"
+    ],
+    "threshold": 100,
+    "repositoryUrl": "https://github.com/mattyboy/istanbul-slack-notify"
+  },
   "dependencies": {
     "colors": "^1.1.2",
     "es6-promise": "^4.1.0",
     "istanbul": "^0.4.5",
+    "node-fetch": "^2.1.2",
     "slack-node": "^0.1.8",
     "xml2js": "^0.4.19"
   },
+  "description": "Sends istanbul / jest coverage summary and git build details to Slack using a pass/fail threshold for project coverage.",
   "devDependencies": {
     "babel-preset-es2015": "^6.24.1",
     "coveralls": "^2.13.1",
     "eslint": "^3.19.0",
     "jest": "^20.0.3"
   },
+  "homepage": "https://github.com/mattyboy/istanbul-slack-notify#readme",
   "jest": {
     "verbose": true,
     "collectCoverage": true,
@@ -54,12 +81,28 @@
       "text-summary"
     ]
   },
-  "coverage": {
-	"useSvn": true,
-    "coverageFiles": [
-      "coverage/coverage-final.json"
-    ],
-    "threshold": 100,
-    "repositoryUrl": "https://github.com/mattyboy/istanbul-slack-notify"
-  }
+  "keywords": [
+    "slack",
+    "jest",
+    "coverage",
+    "istanbul"
+  ],
+  "license": "MIT",
+  "main": "./bin/notify.js",
+  "name": "istanbul-slack-notify",
+  "optionalDependencies": {},
+  "readme": "# istanbul-slack-notify\n\n[![Build Status](https://travis-ci.org/mattyboy/istanbul-slack-notify.svg?branch=master)](https://travis-ci.org/mattyboy/istanbul-slack-notify) \n[![Coverage Status](https://coveralls.io/repos/github/mattyboy/istanbul-slack-notify/badge.svg?branch=master)](https://coveralls.io/github/mattyboy/istanbul-slack-notify?branch=master)\n\nSends istanbul / jest coverage summary and git build details to Slack using a pass/fail threshold for project coverage.\n\n![screenshot](https://raw.githubusercontent.com/mattyboy/istanbul-slack-notify/master/screenshot.png \"Message example\")\n\nIf SLACK_WEBHOOK is not provided it prints total coverage info to console instead\n\n![screenshot console](https://raw.githubusercontent.com/mattyboy/istanbul-slack-notify/master/screenshot-console.png \"Console example\")\n\n## Table of Contents\n\n  1. [Installation](#installation)\n  2. [Setup](#setup)\n  3. [Examples](#examples)\n      1. [Via npm task](#example-npm)\n      2. [Via cli](#example-cli)\n  4. [Contributing](#contributing)\n  \n## Installation\n<a name=\"installation\"></a>\n\n```\nnpm i --save-dev istanbul-slack-notify\n```\n\n## Setup\n<a name=\"setup\"></a>\n\n**Do not share incoming webhook URLs in public code repositories.**\n\nYou will need to configure a webhook for your Slack team: https://api.slack.com/incoming-webhooks\n\nYou must define `SLACK_WEBHOOK` as an environment variable.\n\nYou can override other default settings in your `package.json` by adding the following section:\n\n```json\n  \"coverage\": {\n    \"threshold\": 100,\n    \"projectName\": \"Istanbul Slack Notify\",\n    \"repositoryUrl\": \"https://github.com/mattyboy/istanbul-slack-notify\",\n    \"coverageFiles\": [\"coverage/coverage-final.json\"],\n    \"username\": \"coverage-bot\",\n    \"channel\": \"#random\"\n  }\n```\n\nIstanbul / Jest coverage report for your project must be generated first. \n\n## Examples\n<a name=\"examples\"></a>\n\n### Via npm task\n<a name=\"example-npm\"></a>\n\n**Passing SLACK_WEBHOOK at runtime**\n\nDefine a couple of npm tasks in `package.json`, assuming you only want slack notify from you CI server.\n```json\n\"test\": \"./node_modules/.bin/jest --coverage\",\n\"test-ci\": \"npm test && ./node_modules/.bin/istanbul-slack-notify\",\n```\n\nThen run tests on your CI server as follows.\n\n```bash\nexport SLACK_WEBHOOK=https://hooks.slack.com/xxxxx\nSLACK_WEBHOOK=$SLACK_WEBHOOK npm run test-ci\n```\n\nNote: If you don't set the SLACK_WEBHOOK it will print totals coverage to console instead\n\n**Defining SLACK_WEBHOOK in package.json**\n\nWhile you can do this be sure it isn't in a public repo as you will expose your slack webhook url.\n\n```json\n\"test\": \"./node_modules/.bin/jest --coverage && ./node_modules/.bin/istanbul-slack-notify\",\n\"test-ci\": \"npm test && SLACK_WEBHOOK=https://hooks.slack.com/xxxxx ./node_modules/.bin/istanbul-slack-notify\",\n```\n\n### Via cli\n<a name=\"example-cli\"></a>\n\n```bash\nexport SLACK_WEBHOOK=https://hooks.slack.com/xxxxx\nSLACK_WEBHOOK=$SLACK_WEBHOOK ./node_modules/.bin/istanbul-slack-notify\n```\n\n## Contributing\n<a name=\"contributing\"></a>\n\nIf you have any feedback or suggestions please let me know. We use this package as part of our CI process and \nare open to changes that would be valuable to us and others. ",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattyboy/istanbul-slack-notify.git"
+  },
+  "scripts": {
+    "coverage": "jest --coverage",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "lint": "eslint src/ test/",
+    "notify": "npm run test && ./bin/notify.js",
+    "test": "npm run lint && npm run coverage && ./bin/notify.js"
+  },
+  "version": "1.0.18"
 }
